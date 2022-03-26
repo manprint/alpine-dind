@@ -4,8 +4,6 @@ RUN apk add --no-cache --update bash nano curl wget sudo busybox-suid git xz pig
 	docker supervisor openssh docker-compose net-tools bash-completion busybox fuse unzip sshpass && \
 	mkdir -p /var/log/supervisor && \
 	mkdir -p /var/run/sshd && \
-	sed -ri 's/^#?PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config && \
-	sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config && \
 	mkdir /root/.ssh && \
 	ssh-keygen -f /etc/ssh/ssh_host_rsa_key -N '' -t rsa && \
 	addgroup -g 1000 alpine && \
@@ -33,7 +31,8 @@ RUN cd /tmp/assets && \
 	cp -a motd /etc && chmod 644 /etc/motd && \
 	touch /etc/fuse.conf && \
 	echo "user_allow_other" > /etc/fuse.conf && chmod 775 /etc/fuse.conf && \
-	cp -a versions /usr/bin
+	cp -a versions /usr/bin && \
+	cp -a sshd_config /etc/ssh
 
 EXPOSE 22 2375
 WORKDIR /home/alpine
