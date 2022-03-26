@@ -68,19 +68,34 @@ Si consiglia per la persistenza della directory di docker di utilizzare un `name
 --volume=docker_alpine_volume:/var/lib/docker \
 ```
 
+In alternativa, è possibile utilizzare un `binded volume`; seguono le istruzioni.
+
+- Creazione cartella locale (sostituire `user` con il proprio utente o specificare un path specifico):
+  
+```
+export USER=user
+mkdir /home/$USER/docker_alpine_volume
+```
+
+- Comando da aggiungere all'avvio rapido oppure al makefile (sostituire `user` con il proprio utente o specificare un path specifico):
+
+```
+--volume=/home/$USER/docker_alpine_volume:/var/lib/docker \
+```
+
 ### Persistenza home
 
 Per la persistenza della cartella home dell'utente alpine (utente predefinito, UID=1000, GID=1000 all'interno del container) utilizzare un `binded volume`. Le istruzioni e la riga da aggiungere al makefile ed all'avvio rapido sono le seguenti:
 
-- Creazione cartella locale (sostituire user con il proprio utente o specificare un path specifico):
+- Creazione cartella locale (sostituire `user` con il proprio utente o specificare un path specifico):
   
 ```
 export USER=user
 mkdir /home/$USER/home_alpine_volume && chown -R 1000:1000 /home/$USER/home_alpine_volume
 ```
 
-- Comando da aggiungere all'avvio rapido oppure al makefile (sostituire user con il proprio utente o specificare un path specifico):
+- Comando da aggiungere all'avvio rapido oppure al makefile (sostituire `user` con il proprio utente o specificare un path specifico):
 
 ```
---volume=/home/$USER/home_alpine_volume:/home/alpine
+--volume=/home/$USER/home_alpine_volume:/home/alpine \
 ```
