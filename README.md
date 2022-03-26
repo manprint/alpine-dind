@@ -4,12 +4,14 @@ Immagine docker alpine con installati docker, cron e ssh.
 
 ## Uso
 
-Uso destinato esclusivamente ai fini di test.
-NON UTILIZZARE IN PRODUZIONE!
+Uso destinato esclusivamente alla creazione di ambienti di test, pipeline, ci/cd, etc.
+
+**NON UTILIZZARE IN PRODUZIONE!**
 
 ### Prerequisiti
 
-- Make deve essere installato sulla macchina host
+- Se si usa il comando rapido, l'immagine non ha prerequisiti.
+- Make deve essere installato sulla macchina host per poter utilizzare il makefile
   `sudo apt install make`
 
 ### Avvio rapido privilegiato
@@ -47,10 +49,12 @@ Per comodità, è stato creato un makefile per eseguire i task di avvio, stop, e
 Per utilizzare il makefile seguire le istruzioni seguenti:
 
 - Creare una cartella di lavoro, ad esempio `~/dind-env` ed entrare nella cartella
-- Scaricare il makefile tramite il seguente comando:
-  `curl -sSL https://raw.githubusercontent.com/manprint/alpine-dind/develop/Makefile -o Makefile`
+- Scaricare il makefile (versione Lite, senza i task di test e push) tramite il seguente comando:
+  `curl -sSL https://raw.githubusercontent.com/manprint/alpine-dind/develop/MakefileLite -o Makefile`
 - Eseguire il comando `make` per vedere i task disponibili
 - Modificare il makefile se è necessario secondo le proprie esigenze (ad esempio per aggiungere la persistenza o inserire una network)
+
+**Nota bene**: nel caso si voglia sviluppare o modificare le funzionalità, clonare il repo: `git clone https://github.com/manprint/alpine-dind.git`
 
 ## Persistenza
 
@@ -71,11 +75,12 @@ Per la persistenza della cartella home dell'utente alpine (utente predefinito, U
 - Creazione cartella locale (sostituire user con il proprio utente o specificare un path specifico):
   
 ```
-mkidir /home/<user>/home_alpine_volume
+export USER=user
+mkdir /home/$USER/home_alpine_volume && chown -R 1000:1000 /home/$USER/home_alpine_volume
 ```
 
 - Comando da aggiungere all'avvio rapido oppure al makefile (sostituire user con il proprio utente o specificare un path specifico):
 
 ```
---volume=/home/<user>/home_alpine_volume:/home/alpine
+--volume=/home/$USER/home_alpine_volume:/home/alpine
 ```
