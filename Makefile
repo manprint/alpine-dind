@@ -14,6 +14,8 @@ export CONTAINER=alpine-dind
 export CONTAINER_HOSTNAME=alpine-dind
 export CR_PATH := ${CR_PATH}
 
+export CURRENT_DIR = $(shell pwd)
+
 .DEFAULT := help
 
 help:
@@ -72,6 +74,9 @@ connect: ## Connect to container (default user: alpine (1000:1000))
 	@echo "Wait for docker container $(CONTAINER) ..."
 	@sleep 10 # wait for container
 	@docker exec -it $(CONTAINER) bash -l
+
+retrive_ssh_pem: ## Retrive ssh pem key in current directory
+	@docker cp $(CONTAINER):/home/alpine/.ssh/alpine-dind.pem $(CURRENT_DIR)
 
 ssh: ## Connect via ssh (password: alpine)
 	@echo "Wait for ssh service in $(CONTAINER) ..."
