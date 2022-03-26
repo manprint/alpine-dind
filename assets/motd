@@ -1,0 +1,21 @@
+
+-----------------------
+Welcome to Alpine DIND!
+-----------------------
+
+This container is for test purpose only!
+*** Do not use in Production! ***
+Developed by Manprint
+https://github.com/manprint/alpine-dind.git
+
+--------------
+App installed:
+--------------
+
+- dockerd         v20.10.14
+- docker-compose  v1.29.2
+- sshd            v8.8p1
+- rclone          v1.58.0
+- terraform       v1.1.7
+- crond           v1.34.1
+

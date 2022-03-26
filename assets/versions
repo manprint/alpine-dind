@@ -1,0 +1,15 @@
+#!/bin/bash
+
+echo
+echo "Docker version..."
+docker -v
+echo
+echo "Docker Compose version..."
+docker-compose -v
+echo
+echo "Rclone version..."
+rclone version
+echo
+echo "Terraform version..."
+terraform -v
+echo

@@ -69,10 +69,14 @@ start: ## Start container (if exist)
 ##@ Container connection
 
 connect: ## Connect to container (default user: alpine (1000:1000))
+	@echo "Wait for docker container $(CONTAINER) ..."
+	@sleep 10 # wait for container
 	@docker exec -it $(CONTAINER) bash -l
 
 ssh: ## Connect via ssh (password: alpine)
-	@ssh -p 2255 alpine@localhost
+	@echo "Wait for ssh service in $(CONTAINER) ..."
+	@sleep 10 # wait for ssh
+	@sshpass -p alpine ssh -o 'StrictHostKeyChecking no' -p 2255 alpine@localhost
 
 ##@ Test suite
 

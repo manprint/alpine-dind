@@ -1,7 +1,7 @@
 FROM alpine:latest
 
-RUN apk add --no-cache --update bash nano curl wget sudo busybox-suid \
-	docker supervisor openssh docker-compose net-tools bash-completion busybox && \
+RUN apk add --no-cache --update bash nano curl wget sudo busybox-suid git xz pigz fuse-overlayfs py3-pip \
+	docker supervisor openssh docker-compose net-tools bash-completion busybox fuse unzip sshpass && \
 	mkdir -p /var/log/supervisor && \
 	mkdir -p /var/run/sshd && \
 	sed -ri 's/^#?PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config && \
@@ -13,7 +13,12 @@ RUN apk add --no-cache --update bash nano curl wget sudo busybox-suid \
 	sed -i -e "s/bin\/ash/bin\/bash/" /etc/passwd && \
 	echo "alpine ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
 	echo "root":"root" | chpasswd && echo "alpine":"alpine" | chpasswd && \
-	adduser alpine wheel && adduser alpine root && adduser alpine docker
+	adduser alpine wheel && adduser alpine root && adduser alpine docker && \
+	curl https://rclone.org/install.sh | sudo bash && \
+	curl -O https://releases.hashicorp.com/terraform/1.1.7/terraform_1.1.7_linux_amd64.zip && \
+	unzip terraform_1.1.7_linux_amd64.zip && mv terraform /usr/bin/ && \
+	chmod +x /usr/bin/terraform && rm -f terraform_1.1.7_linux_amd64.zip && \
+	pip3 install --no-cache-dir runlike
 
 COPY assets /tmp/assets
 
@@ -23,7 +28,12 @@ RUN cd /tmp/assets && \
 	mkdir -p /usr/bin/ && \
 	cp -a entrypoint.sh /usr/bin/ && \
 	mkdir -p /etc/docker/ && \
-	cp -a daemon.json /etc/docker/
+	cp -a daemon.json /etc/docker && \
+	rm -f /etc/motd && \
+	cp -a motd /etc && chmod 644 /etc/motd && \
+	touch /etc/fuse.conf && \
+	echo "user_allow_other" > /etc/fuse.conf && chmod 775 /etc/fuse.conf && \
+	cp -a versions /usr/bin
 
 EXPOSE 22 2375
 WORKDIR /home/alpine
