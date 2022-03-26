@@ -1,6 +1,7 @@
 .PHONY: help build pull push
 .PHONY: down stop up up_sysbox start
 .PHONY: connect ssh
+.PHONY: test_prereq test_postreq test_exec_1 test
 
 export TITLE_MAKEFILE=Makefile Alpine Dind SSH Cron
 export RED := $(shell tput setaf 1)
@@ -31,15 +32,15 @@ pull: ## Pull image
 	@docker pull $(IMAGE)
 
 push: ## Push image
-	@echo "Please export CR_PATH (Github Token) variable in local shell..."
+	@echo "$(RED)Please export CR_PATH (Github Token) variable in local shell...$(RESET)"
 	docker login ghcr.io -u manprint -p $(CR_PATH)
 	@docker push $(IMAGE)
 
 ##@ Container
 
 down: ## Stop and remove dind container (Lost of ephimeral data)
-	@docker stop $(CONTAINER)
-	@docker rm $(CONTAINER)
+	-@docker stop $(CONTAINER)
+	-@docker rm $(CONTAINER)
 
 stop: ## Stop dind container (Preserve ephimeral data)
 	@docker stop $(CONTAINER)
@@ -72,3 +73,25 @@ connect: ## Connect to container (default user: alpine (1000:1000))
 
 ssh: ## Connect via ssh (password: alpine)
 	@ssh -p 2255 alpine@localhost
+
+##@ Test suite
+
+test_prereq: down up_sysbox
+
+test_postreq: down
+
+test_exec_1:
+	-@sleep 15 # wait for docker
+	-@docker cp ./tests/base_suite.sh $(CONTAINER):/home/alpine
+	-@docker exec -it $(CONTAINER) ls -alFh /home/alpine
+	-@docker exec -it $(CONTAINER) bash -c "/home/alpine/base_suite.sh"
+	-@docker stop $(CONTAINER)
+	-@docker start $(CONTAINER)
+	-@sleep 15 # wait for docker
+	-@docker ps -a
+	-@docker system df -v
+	-@docker exec -it $(CONTAINER) bash -c "docker rm -f alpine"
+	-@docker exec -it $(CONTAINER) bash -c "/home/alpine/base_suite.sh"
+	-@echo
+
+test: test_prereq test_exec_1 test_postreq ## Run test suite
