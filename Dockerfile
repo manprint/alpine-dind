@@ -1,7 +1,7 @@
 FROM alpine:latest
 
-RUN apk add --no-cache --update bash nano curl wget sudo \
-	docker supervisor openssh docker-compose net-tools bash-completion && \
+RUN apk add --no-cache --update bash nano curl wget sudo busybox-suid \
+	docker supervisor openssh docker-compose net-tools bash-completion busybox && \
 	mkdir -p /var/log/supervisor && \
 	mkdir -p /var/run/sshd && \
 	sed -ri 's/^#?PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config && \
@@ -15,18 +15,15 @@ RUN apk add --no-cache --update bash nano curl wget sudo \
 	echo "root":"root" | chpasswd && echo "alpine":"alpine" | chpasswd && \
 	adduser alpine wheel && adduser alpine root && adduser alpine docker
 
-COPY prepare /tmp/prepare
+COPY assets /tmp/assets
 
-RUN cd /tmp/prepare && \
-	cp -a .bashrc .bash_profile /home/alpine/ && chown alpine:alpine .bashrc .bash_profile && \
-	cp -a .bashrc .bash_profile /root/ && \
+RUN cd /tmp/assets && \
 	mkdir -p /etc/supervisor.d/ && \
 	cp -a supervisord.ini /etc/supervisor.d/ && \
 	mkdir -p /usr/bin/ && \
 	cp -a entrypoint.sh /usr/bin/ && \
 	mkdir -p /etc/docker/ && \
-	cp -a daemon.json /etc/docker/ && \
-	rm -rf /tmp/prepare
+	cp -a daemon.json /etc/docker/
 
 EXPOSE 22 2375
 WORKDIR /home/alpine
