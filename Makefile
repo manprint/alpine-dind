@@ -1,6 +1,7 @@
 .PHONY: help build pull push
 .PHONY: down stop up up_sysbox start
 .PHONY: connect retrive_ssh_pem ssh
+.PHONY: context_create context_enable context_disable context_remove
 .PHONY: test_prereq test_postreq test_exec_1 test
 
 export TITLE_MAKEFILE=Makefile Alpine Dind SSH Cron
@@ -82,6 +83,22 @@ ssh: ## Connect via ssh (password: alpine)
 	@echo "Wait for ssh service in $(CONTAINER) ..."
 	@sleep 10 # wait for ssh
 	@sshpass -p alpine ssh -o 'StrictHostKeyChecking no' -p 2255 alpine@localhost
+
+##@ Docker context
+
+context_create: ## Create docker context for dind container
+	@docker context create $(CONTAINER) \
+		--description "Docker Dind Alpine" \
+		--docker "host=tcp://localhost:2375"
+
+context_enable: ## Enable context for dind container
+	@docker context use $(CONTAINER)
+
+context_disable: ## Disable context for dind (switch to default)
+	@docker context use default
+
+context_remove: context_disable ## Disable dind context, switch to default and remove
+	@docker context rm $(CONTAINER)
 
 ##@ Test suite
 

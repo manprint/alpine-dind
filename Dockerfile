@@ -1,7 +1,9 @@
 FROM alpine:latest
 
-RUN apk add --no-cache --update bash nano curl wget sudo busybox-suid git xz pigz fuse-overlayfs py3-pip \
-	docker supervisor openssh docker-compose net-tools bash-completion busybox fuse unzip sshpass && \
+RUN apk add --no-cache --update bash nano curl wget sudo \
+	busybox-suid git xz pigz fuse-overlayfs py3-pip \
+	docker supervisor openssh docker-compose net-tools \
+	bash-completion busybox fuse unzip sshpass make && \
 	mkdir -p /var/log/supervisor && \
 	mkdir -p /var/run/sshd && \
 	mkdir /root/.ssh && \
