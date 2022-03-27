@@ -4,7 +4,7 @@
 .PHONY: context_create context_enable context_disable context_remove
 .PHONY: test_prereq test_postreq test_exec_1 test
 
-export TITLE_MAKEFILE=Makefile Alpine Dind SSH Cron
+export TITLE_MAKEFILE=Makefile Alpine Dind SSH Cron Terraform
 export RED := $(shell tput setaf 1)
 export RESET := $(shell tput sgr0)
 
