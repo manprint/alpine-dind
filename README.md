@@ -1,6 +1,6 @@
-# Alpine image with SSHD, Crontab and Docker
+# Alpine image with Ssh, Crontab, Docker and Terraform
 
-Immagine docker alpine con installati docker, cron e ssh.
+Immagine docker alpine con installati docker, cron, ssh e terraform.
 
 ## Uso
 
@@ -98,4 +98,36 @@ mkdir /home/$USER/home_alpine_volume && chown -R 1000:1000 /home/$USER/home_alpi
 
 ```
 --volume=/home/$USER/home_alpine_volume:/home/alpine \
+```
+
+### Esempio di avvio con persistenza
+
+Nota Bene: sostituire i path locali dei volumi con quelli relativi al proprio ambiente
+
+#### Avvio privilegiato
+
+```
+docker run -d \
+	--name=dind-env \
+	--hostname=alpine \
+	--privileged=true \
+	--publish=2375:2375/tcp \
+	--publish=2255:22/tcp \
+	--volume=/home/mint/docker/dind-alpine/docker-vol:/var/lib/docker \
+	--volume=/home/mint/docker/dind-alpine/alpine-vol:/home-alpine \
+	ghcr.io/manprint/alpine-dind:latest
+```
+
+#### Avvio non privilegiato (sysbox)
+
+```
+docker run -d \
+	--name=dind-env \
+	--hostname=alpine \
+	--runtime=sysbox-runc \
+	--publish=2375:2375/tcp \
+	--publish=2255:22/tcp \
+	--volume=/home/mint/docker/dind-alpine/docker-vol:/var/lib/docker \
+	--volume=/home/mint/docker/dind-alpine/alpine-vol:/home-alpine \
+	ghcr.io/manprint/alpine-dind:latest
 ```
