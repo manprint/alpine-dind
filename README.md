@@ -114,7 +114,7 @@ docker run -d \
 	--publish=2375:2375/tcp \
 	--publish=2255:22/tcp \
 	--volume=/home/mint/docker/dind-alpine/docker-vol:/var/lib/docker \
-	--volume=/home/mint/docker/dind-alpine/alpine-vol:/home-alpine \
+	--volume=/home/mint/docker/dind-alpine/alpine-vol:/home/alpine \
 	ghcr.io/manprint/alpine-dind:latest
 ```
 
@@ -128,6 +128,6 @@ docker run -d \
 	--publish=2375:2375/tcp \
 	--publish=2255:22/tcp \
 	--volume=/home/mint/docker/dind-alpine/docker-vol:/var/lib/docker \
-	--volume=/home/mint/docker/dind-alpine/alpine-vol:/home-alpine \
+	--volume=/home/mint/docker/dind-alpine/alpine-vol:/home/alpine \
 	ghcr.io/manprint/alpine-dind:latest
 ```
