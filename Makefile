@@ -1,5 +1,5 @@
-.PHONY: help build pull push
-.PHONY: down stop up up_sysbox start
+.PHONY: help build build_no_cache pull publish clean_docker_build
+.PHONY: volume_prune down stop up up_sysbox start
 .PHONY: connect retrive_ssh_pem ssh
 .PHONY: context_create context_enable context_disable context_remove
 .PHONY: test_prereq test_postreq test_exec_1 test
@@ -31,19 +31,32 @@ help:
 build: ## Build docker image
 	@docker build --force-rm --rm --tag $(IMAGE) .
 
+build_no_cache: ## Build docker image
+	@docker build --no-cache --force-rm --rm --tag $(IMAGE) .
+
+clean_docker_build: ## Clear docker build structure
+	@echo "y" | docker image prune
+	@echo "y" | docker builder prune
+
 pull: ## Pull image
 	@docker pull $(IMAGE)
 
-push: ## Push image
-	@echo "$(RED)Please export CR_PATH (Github Token) variable in local shell...$(RESET)"
-	docker login ghcr.io -u manprint -p $(CR_PATH)
+publish: ## Push image
+	@echo "$(RED)Create in repo folder the "github.token" file for publish image...$(RESET)"
+	$(MAKE) build_no_cache
+	cat github.token | docker login ghcr.io -u manprint --password-stdin
 	@docker push $(IMAGE)
+	$(MAKE) clean_docker_build
 
 ##@ Container
+
+volume_prune: ## Remove dangling volume
+	-@echo "y" | docker volume prune 
 
 down: ## Stop and remove dind container (Lost of ephimeral data)
 	-@docker stop $(CONTAINER)
 	-@docker rm $(CONTAINER)
+	$(MAKE) volume_prune
 
 stop: ## Stop dind container (Preserve ephimeral data)
 	@docker stop $(CONTAINER)
