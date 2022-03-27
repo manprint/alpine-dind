@@ -1,6 +1,6 @@
-.PHONY: help pull 
+.PHONY: help pull
 .PHONY: down stop up up_sysbox start
-.PHONY: connect ssh
+.PHONY: connect retrive_ssh_pem ssh
 
 export TITLE_MAKEFILE=Makefile Alpine Dind SSH Cron
 export RED := $(shell tput setaf 1)

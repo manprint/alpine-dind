@@ -1,6 +1,6 @@
 .PHONY: help build pull push
 .PHONY: down stop up up_sysbox start
-.PHONY: connect ssh
+.PHONY: connect retrive_ssh_pem ssh
 .PHONY: test_prereq test_postreq test_exec_1 test
 
 export TITLE_MAKEFILE=Makefile Alpine Dind SSH Cron
