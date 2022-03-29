@@ -51,7 +51,7 @@ publish: ## Push image
 ##@ Container
 
 volume_prune: ## Remove dangling volume
-	-@echo "y" | docker volume prune 
+	-@echo "y" | docker volume prune
 
 down: ## Stop and remove dind container (Lost of ephimeral data)
 	-@docker stop $(CONTAINER)
@@ -103,7 +103,7 @@ chrome_webssh: ## Open chrome webssh
 	@google-chrome "http://localhost:8888/?hostname=localhost&username=alpine&password=YWxwaW5l&title=$(CONTAINER)" > /dev/null 2>&1 &
 
 firefox_webssh: ## Open firefox webssh
-	@firefox "http://localhost:8888/?hostname=localhost&username=alpine&password=YWxwaW5l&title=$(CONTAINER)" > /dev/null 2>61 &
+	@firefox "http://localhost:8888/?hostname=localhost&username=alpine&password=YWxwaW5l&title=$(CONTAINER)" > /dev/null 2>&1 &
 
 ##@ Docker context
 

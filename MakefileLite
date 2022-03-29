@@ -80,7 +80,7 @@ chrome_webssh: ## Open chrome webssh
 	@google-chrome "http://localhost:8888/?hostname=localhost&username=alpine&password=YWxwaW5l&title=$(CONTAINER)" > /dev/null 2>&1 &
 
 firefox_webssh: ## Open firefox webssh
-	@firefox "http://localhost:8888/?hostname=localhost&username=alpine&password=YWxwaW5l&title=$(CONTAINER)" > /dev/null 2>61 &
+	@firefox "http://localhost:8888/?hostname=localhost&username=alpine&password=YWxwaW5l&title=$(CONTAINER)" > /dev/null 2>&1 &
 
 ##@ Docker context
 
