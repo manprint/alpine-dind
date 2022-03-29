@@ -68,6 +68,7 @@ up: ## Create and launch privileged container
 		--privileged=true \
 		--publish=2375:2375/tcp \
 		--publish=2255:22/tcp \
+		--publish=8888:8888/tcp \
 		$(IMAGE)
 
 up_sysbox: ## Create and launch unprivileged container (require sysbox installed)
@@ -77,6 +78,7 @@ up_sysbox: ## Create and launch unprivileged container (require sysbox installed
 		--runtime=sysbox-runc \
 		--publish=2375:2375/tcp \
 		--publish=2255:22/tcp \
+		--publish=8888:8888/tcp \
 		$(IMAGE)
 
 start: ## Start container (if exist)
@@ -96,6 +98,12 @@ ssh: ## Connect via ssh (password: alpine)
 	@echo "Wait for ssh service in $(CONTAINER) ..."
 	@sleep 10 # wait for ssh
 	@sshpass -p alpine ssh -o 'StrictHostKeyChecking no' -p 2255 alpine@localhost
+
+chrome_webssh: ## Open chrome webssh
+	@google-chrome "http://localhost:8888/?hostname=localhost&username=alpine&password=YWxwaW5l&title=$(CONTAINER)" > /dev/null 2>&1 &
+
+firefox_webssh: ## Open firefox webssh
+	@firefox "http://localhost:8888/?hostname=localhost&username=alpine&password=YWxwaW5l&title=$(CONTAINER)" > /dev/null 2>61 &
 
 ##@ Docker context
 

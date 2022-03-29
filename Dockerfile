@@ -1,9 +1,8 @@
-FROM alpine:latest
+FROM alpine:3.13
 
-RUN apk add --no-cache --update bash nano curl wget sudo \
-	busybox-suid git xz pigz fuse-overlayfs py3-pip \
-	docker supervisor openssh docker-compose net-tools \
-	bash-completion busybox fuse unzip sshpass make && \
+RUN apk add --no-cache --update bash nano curl wget sudo tree \
+	busybox-suid git xz pigz py3-pip docker supervisor openssh \
+	docker-compose net-tools bash-completion busybox fuse unzip sshpass make && \
 	mkdir -p /var/log/supervisor && \
 	mkdir -p /var/run/sshd && \
 	mkdir /root/.ssh && \
@@ -18,7 +17,7 @@ RUN apk add --no-cache --update bash nano curl wget sudo \
 	curl -O https://releases.hashicorp.com/terraform/1.1.7/terraform_1.1.7_linux_amd64.zip && \
 	unzip terraform_1.1.7_linux_amd64.zip && mv terraform /usr/bin/ && \
 	chmod +x /usr/bin/terraform && rm -f terraform_1.1.7_linux_amd64.zip && \
-	pip3 install --no-cache-dir runlike
+	pip3 install --no-cache-dir runlike webssh
 
 COPY assets /tmp/assets
 
@@ -36,7 +35,7 @@ RUN cd /tmp/assets && \
 	cp -a versions /usr/bin && \
 	cp -a sshd_config /etc/ssh
 
-EXPOSE 22 2375
+EXPOSE 22 2375 8888
 WORKDIR /home/alpine
 VOLUME [ "/var/lib/docker" ]
 USER alpine
