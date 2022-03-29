@@ -1,6 +1,6 @@
-# Alpine image with Ssh, Crontab, Docker and Terraform
+# Alpine image with Ssh, Crontab, Docker, Terraform and Webssh
 
-Immagine docker alpine con installati docker, cron, ssh e terraform.
+Immagine docker alpine con installati docker, cron, ssh, terraform e webssh.
 
 ## Uso
 
@@ -25,6 +25,7 @@ docker run -d \
 	--privileged=true \
 	--publish=2375:2375/tcp \
 	--publish=2255:22/tcp \
+	--publish=8888:8888/tcp \
 	ghcr.io/manprint/alpine-dind:latest
 ```
 ### Avvio rapido non privilegiato (sysbox) (consigliato)
@@ -44,6 +45,7 @@ docker run -d \
 	--runtime=sysbox-runc \
 	--publish=2375:2375/tcp \
 	--publish=2255:22/tcp \
+	--publish=8888:8888/tcp \
 	ghcr.io/manprint/alpine-dind:latest
 ```
 ### Gestione container tramite makefile
@@ -60,6 +62,39 @@ Per utilizzare il makefile seguire le istruzioni seguenti:
 
 - Eseguire il comando `make` per vedere i task disponibili
 - Modificare il makefile se è necessario secondo le proprie esigenze (ad esempio per aggiungere la persistenza o inserire una network)
+
+## Connessione al container
+
+Per connettersi al container è possibile utilizzare i seguenti metodi:
+
+### Connessione nativa docker
+
+```
+docker exec -it dind-env bash
+```
+
+### Connessione ssh
+
+```
+ssh -o 'StrictHostKeyChecking no' -p 2255 alpine@localhost
+```
+
+### Connessione webssh (tramite browser)
+
+Aprire il browser all'indirizzo:
+
+http://localhost:8888/
+
+Inserire i seguenti dati:
+
+* host: `localhost`
+* port: `22` (porta interna del container)
+* username: `alpine`
+* password: `alpine`
+
+In modo più rapido, i dati possono essere passati come query string (la password è `alpine` in base64: `YWxwaW5l`):
+
+http://localhost:8888/?hostname=localhost&username=alpine&password=YWxwaW5l&title=Alpine-Dind
 
 ## Persistenza
 
@@ -115,6 +150,7 @@ docker run -d \
 	--privileged=true \
 	--publish=2375:2375/tcp \
 	--publish=2255:22/tcp \
+	--publish=8888:8888/tcp \
 	--volume=/home/mint/docker/dind-alpine/docker-vol:/var/lib/docker \
 	--volume=/home/mint/docker/dind-alpine/alpine-vol:/home/alpine \
 	ghcr.io/manprint/alpine-dind:latest
@@ -128,6 +164,7 @@ docker run -d \
 	--runtime=sysbox-runc \
 	--publish=2375:2375/tcp \
 	--publish=2255:22/tcp \
+	--publish=8888:8888/tcp \
 	--volume=/home/mint/docker/dind-alpine/docker-vol:/var/lib/docker \
 	--volume=/home/mint/docker/dind-alpine/alpine-vol:/home/alpine \
 	ghcr.io/manprint/alpine-dind:latest
