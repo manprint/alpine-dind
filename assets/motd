@@ -12,10 +12,11 @@ https://github.com/manprint/alpine-dind.git
 App installed:
 --------------
 
-- dockerd         v20.10.14
-- docker-compose  v1.29.2
+- dockerd         v20.10.3
+- docker-compose  v1.27.4
 - sshd            v8.8p1
 - rclone          v1.58.0
 - terraform       v1.1.7
 - crond           v1.34.1
+- webssh          v1.5.3
 
